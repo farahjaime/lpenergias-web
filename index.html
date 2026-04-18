@@ -594,12 +594,12 @@ var dataLoaded = false;
 async function loadAllData() {
     if (dataLoaded) return;
     var results = await Promise.all([
-        db.from('proyectos').select('*'),
-        db.from('clientes').select('*'),
-        db.from('parcelas').select('*'),
-        db.from('medidores').select('*'),
-        db.from('cuarteles').select('*'),
-        db.from('lecturas').select('*').order('fecha', { ascending: false })
+        db.from('proyectos').select('*').limit(100),
+        db.from('clientes').select('*').limit(500),
+        db.from('parcelas').select('*').limit(500),
+        db.from('medidores').select('*').limit(500),
+        db.from('cuarteles').select('*').limit(100),
+        db.from('lecturas').select('id,fecha,lectura_kwh,consumo_kwh,medidor_id').order('fecha', { ascending: false }).limit(1000)
     ]);
     CACHE.proyectos = results[0].data || [];
     CACHE.clientes = results[1].data || [];
@@ -768,7 +768,7 @@ async function loadClientes() {
                 medidor: med ? med.numero_medidor : null,
                 medidor_id: med ? med.id : null
             };
-        }).sort(function(a, b) { return a.nombre.localeCompare(b.nombre); });
+        }).sort(function(a, b) { return (a.nombre || '').localeCompare(b.nombre || ''); });
 
         renderClientes(allClientes);
     } catch (err) {
@@ -867,7 +867,7 @@ async function loadParcelas() {
                 cliente_nombre: (cliMap[p.cliente_id] || {}).nombre || '-',
                 medidor: medByParcela[p.id] || null
             };
-        }).sort(function(a, b) { return a.numero.localeCompare(b.numero); });
+        }).sort(function(a, b) { return (a.numero || '').localeCompare(b.numero || ''); });
 
         renderParcelas(allParcelas);
     } catch (err) {
