@@ -584,10 +584,37 @@ var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
 
 var db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// Cache global - cargamos todo una vez y unimos en JS
+var CACHE = { proyectos: [], clientes: [], parcelas: [], medidores: [], cuarteles: [], lecturas: [] };
 var allClientes = [];
 var allParcelas = [];
 var allLecturas = [];
-var proyectosMap = {};
+var dataLoaded = false;
+
+async function loadAllData() {
+    if (dataLoaded) return;
+    var results = await Promise.all([
+        db.from('proyectos').select('*').limit(100),
+        db.from('clientes').select('*').limit(500),
+        db.from('parcelas').select('*').limit(500),
+        db.from('medidores').select('*').limit(500),
+        db.from('cuarteles').select('*').limit(100),
+        db.from('lecturas').select('id,fecha_lectura,lectura_kwh,consumo_periodo,medidor_id').order('fecha_lectura', { ascending: false }).limit(1000)
+    ]);
+    CACHE.proyectos = results[0].data || [];
+    CACHE.clientes = results[1].data || [];
+    CACHE.parcelas = results[2].data || [];
+    CACHE.medidores = results[3].data || [];
+    CACHE.cuarteles = results[4].data || [];
+    CACHE.lecturas = results[5].data || [];
+    dataLoaded = true;
+}
+
+function makeMap(arr, key) {
+    var m = {};
+    (arr || []).forEach(function(item) { m[item[key]] = item; });
+    return m;
+}
 
 async function handleLogin(e) {
     e.preventDefault();
@@ -596,12 +623,9 @@ async function handleLogin(e) {
     btn.disabled = true;
     btn.textContent = 'Ingresando...';
     errorDiv.style.display = 'none';
-
     var email = document.getElementById('loginEmail').value;
     var password = document.getElementById('loginPassword').value;
-
     var result = await db.auth.signInWithPassword({ email: email, password: password });
-
     if (result.error) {
         errorDiv.textContent = 'Correo o contrasena incorrectos. Intenta de nuevo.';
         errorDiv.style.display = 'block';
@@ -609,7 +633,6 @@ async function handleLogin(e) {
         btn.textContent = 'Iniciar sesion';
         return;
     }
-
     showApp(result.data.user);
 }
 
@@ -617,13 +640,12 @@ async function handleLogout() {
     await db.auth.signOut();
     document.getElementById('appLayout').style.display = 'none';
     document.getElementById('loginPage').style.display = 'flex';
+    dataLoaded = false;
 }
 
 async function checkSession() {
     var result = await db.auth.getSession();
-    if (result.data.session) {
-        showApp(result.data.session.user);
-    }
+    if (result.data.session) { showApp(result.data.session.user); }
 }
 
 function showApp(user) {
@@ -657,91 +679,56 @@ function toggleSidebar() {
 
 async function loadDashboard() {
     try {
-        var r1 = await db.from('clientes').select('id', { count: 'exact', head: true });
-        var r2 = await db.from('medidores').select('id', { count: 'exact', head: true });
-        var r3 = await db.from('parcelas').select('id', { count: 'exact', head: true });
-        var r4 = await db.from('lecturas').select('id', { count: 'exact', head: true });
+        await loadAllData();
+        var proyMap = makeMap(CACHE.proyectos, 'id');
+        var parcMap = makeMap(CACHE.parcelas, 'id');
+        var cliMap = makeMap(CACHE.clientes, 'id');
 
-        document.getElementById('statClientes').textContent = r1.count || 0;
-        document.getElementById('statMedidores').textContent = r2.count || 0;
-        document.getElementById('statParcelas').textContent = r3.count || 0;
-        document.getElementById('statLecturas').textContent = r4.count || 0;
-        document.getElementById('statClientesDetail').textContent = 'En 3 proyectos';
+        document.getElementById('statClientes').textContent = CACHE.clientes.length;
+        document.getElementById('statMedidores').textContent = CACHE.medidores.length;
+        document.getElementById('statParcelas').textContent = CACHE.parcelas.length;
+        document.getElementById('statLecturas').textContent = CACHE.lecturas.length;
+        document.getElementById('statClientesDetail').textContent = 'En ' + CACHE.proyectos.length + ' proyectos';
         document.getElementById('statMedidoresDetail').textContent = 'Conectados y en servicio';
         document.getElementById('statParcelasDetail').textContent = 'Registradas en el sistema';
         document.getElementById('statLecturasDetail').textContent = 'Registros historicos';
 
-        var proyResult = await db.from('proyectos').select('id, nombre').order('nombre');
-        var proyectos = proyResult.data;
+        // Proyectos summary
+        var html = '';
+        CACHE.proyectos.forEach(function(p) {
+            var parcProj = CACHE.parcelas.filter(function(pa) { return pa.proyecto_id === p.id; });
+            var parcProjIds = parcProj.map(function(pa) { return pa.id; });
+            var cliProj = CACHE.clientes.filter(function(c) { return parcProjIds.indexOf(c.parcela_id) !== -1; });
+            var parcIds = parcProj.map(function(pa) { return pa.id; });
+            var medProj = CACHE.medidores.filter(function(m) { return parcIds.indexOf(m.parcela_id) !== -1; });
+            var pct = parcProj.length > 0 ? Math.round((medProj.length / parcProj.length) * 100) : 0;
 
-        if (proyectos) {
-            var html = '';
-            for (var i = 0; i < proyectos.length; i++) {
-                var p = proyectos[i];
-                proyectosMap[p.id] = p.nombre;
+            html += '<tr>';
+            html += '<td><strong>' + p.nombre + '</strong></td>';
+            html += '<td>' + parcProj.length + '</td>';
+            html += '<td>' + cliProj.length + '</td>';
+            html += '<td>' + medProj.length + '</td>';
+            html += '<td><span class="badge ' + (pct > 50 ? 'badge-green' : pct > 0 ? 'badge-yellow' : 'badge-gray') + '">' + pct + '%</span></td>';
+            html += '</tr>';
+        });
+        document.getElementById('dashboardProyectos').innerHTML = html;
 
-                var parcCnt = await db.from('parcelas').select('id', { count: 'exact', head: true }).eq('proyecto_id', p.id);
-                var cliCnt = await db.from('clientes').select('id', { count: 'exact', head: true }).eq('proyecto_id', p.id);
+        // Ultimas lecturas
+        var recentLect = CACHE.lecturas.slice(0, 10);
+        var medMap2 = makeMap(CACHE.medidores, 'id');
 
-                var parcelasProj = await db.from('parcelas').select('id').eq('proyecto_id', p.id);
-                var medCount = 0;
-                if (parcelasProj.data && parcelasProj.data.length > 0) {
-                    var parcelaIds = parcelasProj.data.map(function(pp) { return pp.id; });
-                    var medRes = await db.from('medidores').select('id', { count: 'exact', head: true }).in('parcela_id', parcelaIds);
-                    medCount = medRes.count || 0;
-                }
-
-                var parcTotal = parcCnt.count || 0;
-                var cliTotal = cliCnt.count || 0;
-                var pct = parcTotal > 0 ? Math.round((medCount / parcTotal) * 100) : 0;
-
-                html += '<tr>';
-                html += '<td><strong>' + p.nombre + '</strong></td>';
-                html += '<td>' + parcTotal + '</td>';
-                html += '<td>' + cliTotal + '</td>';
-                html += '<td>' + medCount + '</td>';
-                html += '<td><span class="badge ' + (pct > 50 ? 'badge-green' : pct > 0 ? 'badge-yellow' : 'badge-gray') + '">' + pct + '%</span></td>';
-                html += '</tr>';
-            }
-            document.getElementById('dashboardProyectos').innerHTML = html;
-        }
-
-        var lectResult = await db.from('lecturas').select('id, fecha, lectura_kwh, consumo_kwh, medidor_id').order('fecha', { ascending: false }).limit(10);
-        var lecturas = lectResult.data;
-
-        if (lecturas && lecturas.length > 0) {
-            var medidorIds = [];
-            lecturas.forEach(function(l) { if (medidorIds.indexOf(l.medidor_id) === -1) medidorIds.push(l.medidor_id); });
-            var medResult = await db.from('medidores').select('id, parcela_id, numero_medidor').in('id', medidorIds);
-            var medidores = medResult.data || [];
-
-            var medidorMap = {};
-            var parcIds = [];
-            medidores.forEach(function(m) { medidorMap[m.id] = m; if (m.parcela_id) parcIds.push(m.parcela_id); });
-
-            var parcResult2 = await db.from('parcelas').select('id, numero, proyecto_id, cliente_id').in('id', parcIds);
-            var parcelas2 = parcResult2.data || [];
-
-            var parcelaMap = {};
-            var clienteIds2 = [];
-            parcelas2.forEach(function(p) { parcelaMap[p.id] = p; if (p.cliente_id) clienteIds2.push(p.cliente_id); });
-
-            var cliResult2 = await db.from('clientes').select('id, nombre').in('id', clienteIds2);
-            var clientes2 = cliResult2.data || [];
-            var clienteMap = {};
-            clientes2.forEach(function(c) { clienteMap[c.id] = c; });
-
+        if (recentLect.length > 0) {
             var html2 = '';
-            lecturas.forEach(function(l) {
-                var med = medidorMap[l.medidor_id] || {};
-                var parc = parcelaMap[med.parcela_id] || {};
-                var cli = clienteMap[parc.cliente_id] || {};
+            recentLect.forEach(function(l) {
+                var med = medMap2[l.medidor_id] || {};
+                var parc = parcMap[med.parcela_id] || {};
+                var cli = cliMap[parc.cliente_id] || {};
                 html2 += '<tr>';
-                html2 += '<td>' + formatDate(l.fecha) + '</td>';
-                html2 += '<td>' + (cli.nombre || '-') + '</td>';
+                html2 += '<td>' + formatDate(l.fecha_lectura) + '</td>';
+                html2 += '<td>' + (cli.nombre_completo || '-') + '</td>';
                 html2 += '<td>' + (parc.numero || '-') + '</td>';
                 html2 += '<td>' + (l.lectura_kwh || 0) + ' kWh</td>';
-                html2 += '<td><strong>' + (l.consumo_kwh || 0) + ' kWh</strong></td>';
+                html2 += '<td><strong>' + (l.consumo_periodo || 0) + ' kWh</strong></td>';
                 html2 += '</tr>';
             });
             document.getElementById('dashboardLecturas').innerHTML = html2;
@@ -755,53 +742,36 @@ async function loadDashboard() {
 
 async function loadClientes() {
     try {
-        var cliResult = await db.from('clientes').select('id, nombre, proyecto_id').order('nombre');
-        var clientes = cliResult.data;
-        if (!clientes) return;
-
-        var clienteIds = clientes.map(function(c) { return c.id; });
-        var parcResult = await db.from('parcelas').select('id, numero, cliente_id, proyecto_id').in('cliente_id', clienteIds);
-        var parcelas = parcResult.data || [];
-
+        await loadAllData();
+        var proyMap = makeMap(CACHE.proyectos, 'id');
         var parcelaByCliente = {};
-        var parcelaIds = [];
-        parcelas.forEach(function(p) { parcelaByCliente[p.cliente_id] = p; parcelaIds.push(p.id); });
-
+        CACHE.parcelas.forEach(function(p) { if (p.cliente_id) parcelaByCliente[p.cliente_id] = p; });
         var medidorByParcela = {};
-        if (parcelaIds.length > 0) {
-            var medResult = await db.from('medidores').select('id, numero_medidor, parcela_id').in('parcela_id', parcelaIds);
-            (medResult.data || []).forEach(function(m) { medidorByParcela[m.parcela_id] = m; });
+        CACHE.medidores.forEach(function(m) { medidorByParcela[m.parcela_id] = m; });
+
+        // Fill project filter
+        var select = document.getElementById('clientesProyecto');
+        if (select.options.length <= 1) {
+            CACHE.proyectos.forEach(function(p) {
+                var opt = document.createElement('option');
+                opt.value = p.id; opt.textContent = p.nombre;
+                select.appendChild(opt);
+            });
         }
 
-        var proyResult = await db.from('proyectos').select('id, nombre');
-        var proyMap = {};
-        if (proyResult.data) {
-            proyResult.data.forEach(function(p) { proyMap[p.id] = p.nombre; });
-            var select = document.getElementById('clientesProyecto');
-            if (select.options.length <= 1) {
-                proyResult.data.forEach(function(p) {
-                    var opt = document.createElement('option');
-                    opt.value = p.id;
-                    opt.textContent = p.nombre;
-                    select.appendChild(opt);
-                });
-            }
-        }
-
-        allClientes = clientes.map(function(c) {
-            var parc = parcelaByCliente[c.id] || {};
+        var parcMap2 = makeMap(CACHE.parcelas, 'id');
+        allClientes = CACHE.clientes.map(function(c) {
+            var parc = parcMap2[c.parcela_id] || {};
             var med = medidorByParcela[parc.id];
+            var proyId = parc.proyecto_id;
             return {
-                id: c.id,
-                nombre: c.nombre,
-                proyecto_id: c.proyecto_id,
-                parcela_numero: parc.numero || '-',
-                parcela_id: parc.id,
-                proyecto_nombre: proyMap[c.proyecto_id] || '-',
+                id: c.id, nombre: c.nombre_completo, proyecto_id: proyId,
+                parcela_numero: parc.numero || '-', parcela_id: parc.id,
+                proyecto_nombre: (proyMap[proyId] || {}).nombre || '-',
                 medidor: med ? med.numero_medidor : null,
                 medidor_id: med ? med.id : null
             };
-        });
+        }).sort(function(a, b) { return (a.nombre || '').localeCompare(b.nombre || ''); });
 
         renderClientes(allClientes);
     } catch (err) {
@@ -859,12 +829,11 @@ async function showClienteDetalle(clienteId) {
     }
 
     if (cliente.medidor_id) {
-        var lectResult = await db.from('lecturas').select('fecha, lectura_kwh, consumo_kwh').eq('medidor_id', cliente.medidor_id).order('fecha', { ascending: false });
-        var lecturas = lectResult.data;
-        if (lecturas && lecturas.length > 0) {
+        var lecturas = CACHE.lecturas.filter(function(l) { return l.medidor_id === cliente.medidor_id; });
+        if (lecturas.length > 0) {
             var html = '';
             lecturas.forEach(function(l) {
-                html += '<tr><td>' + formatDate(l.fecha) + '</td><td>' + (l.lectura_kwh || 0) + ' kWh</td><td><strong>' + (l.consumo_kwh || 0) + ' kWh</strong></td></tr>';
+                html += '<tr><td>' + formatDate(l.fecha_lectura) + '</td><td>' + (l.lectura_kwh || 0) + ' kWh</td><td><strong>' + (l.consumo_periodo || 0) + ' kWh</strong></td></tr>';
             });
             document.getElementById('detalleLecturas').innerHTML = html;
         } else {
@@ -877,47 +846,33 @@ async function showClienteDetalle(clienteId) {
 
 async function loadParcelas() {
     try {
-        var parcResult = await db.from('parcelas').select('id, numero, proyecto_id, cuartel_id, cliente_id').order('numero');
-        var parcelas = parcResult.data;
-        if (!parcelas) return;
-
-        var proyectoIds = []; var cuartelIds = []; var clienteIds = []; var parcelaIds = [];
-        parcelas.forEach(function(p) {
-            if (proyectoIds.indexOf(p.proyecto_id) === -1) proyectoIds.push(p.proyecto_id);
-            if (p.cuartel_id && cuartelIds.indexOf(p.cuartel_id) === -1) cuartelIds.push(p.cuartel_id);
-            if (p.cliente_id && clienteIds.indexOf(p.cliente_id) === -1) clienteIds.push(p.cliente_id);
-            parcelaIds.push(p.id);
-        });
-
-        var proyRes = await db.from('proyectos').select('id, nombre').in('id', proyectoIds);
-        var cuartRes = cuartelIds.length > 0 ? await db.from('cuarteles').select('id, nombre').in('id', cuartelIds) : { data: [] };
-        var cliRes = clienteIds.length > 0 ? await db.from('clientes').select('id, nombre').in('id', clienteIds) : { data: [] };
-        var medRes = await db.from('medidores').select('id, numero_medidor, parcela_id').in('parcela_id', parcelaIds);
-
-        var proyMap = {}; (proyRes.data || []).forEach(function(p) { proyMap[p.id] = p.nombre; });
-        var cuartMap = {}; (cuartRes.data || []).forEach(function(c) { cuartMap[c.id] = c.nombre; });
-        var cliMap = {}; (cliRes.data || []).forEach(function(c) { cliMap[c.id] = c.nombre; });
-        var medMap = {}; (medRes.data || []).forEach(function(m) { medMap[m.parcela_id] = m.numero_medidor; });
+        await loadAllData();
+        var proyMap = makeMap(CACHE.proyectos, 'id');
+        var cuartMap = makeMap(CACHE.cuarteles, 'id');
+        var cliByParcela = {};
+        CACHE.clientes.forEach(function(c) { if (c.parcela_id) cliByParcela[c.parcela_id] = c; });
+        var medByParcela = {};
+        CACHE.medidores.forEach(function(m) { medByParcela[m.parcela_id] = m.numero_medidor; });
 
         var select = document.getElementById('parcelasProyecto');
-        if (select.options.length <= 1 && proyRes.data) {
-            proyRes.data.forEach(function(p) {
+        if (select.options.length <= 1) {
+            CACHE.proyectos.forEach(function(p) {
                 var opt = document.createElement('option');
-                opt.value = p.id;
-                opt.textContent = p.nombre;
+                opt.value = p.id; opt.textContent = p.nombre;
                 select.appendChild(opt);
             });
         }
 
-        allParcelas = parcelas.map(function(p) {
+        allParcelas = CACHE.parcelas.map(function(p) {
+            var cli = cliByParcela[p.id] || {};
             return {
-                id: p.id, numero: p.numero, proyecto_id: p.proyecto_id, cuartel_id: p.cuartel_id, cliente_id: p.cliente_id,
-                proyecto_nombre: proyMap[p.proyecto_id] || '-',
-                cuartel_nombre: cuartMap[p.cuartel_id] || '-',
-                cliente_nombre: cliMap[p.cliente_id] || '-',
-                medidor: medMap[p.id] || null
+                id: p.id, numero: p.numero, proyecto_id: p.proyecto_id,
+                proyecto_nombre: (proyMap[p.proyecto_id] || {}).nombre || '-',
+                cuartel_nombre: (cuartMap[p.cuartel_id] || {}).nombre || '-',
+                cliente_nombre: cli.nombre_completo || '-',
+                medidor: medByParcela[p.id] || null
             };
-        });
+        }).sort(function(a, b) { return (a.numero || '').localeCompare(b.numero || ''); });
 
         renderParcelas(allParcelas);
     } catch (err) {
@@ -957,53 +912,31 @@ function filterParcelas() {
 
 async function loadLecturas() {
     try {
-        var lectResult = await db.from('lecturas').select('id, fecha, lectura_kwh, consumo_kwh, medidor_id').order('fecha', { ascending: false }).limit(200);
-        var lecturas = lectResult.data;
-        if (!lecturas) return;
-
-        var medidorIds = [];
-        lecturas.forEach(function(l) { if (medidorIds.indexOf(l.medidor_id) === -1) medidorIds.push(l.medidor_id); });
-        var medResult = await db.from('medidores').select('id, parcela_id, numero_medidor').in('id', medidorIds);
-        var medidores = medResult.data || [];
-
-        var medMap = {}; var parcIds = [];
-        medidores.forEach(function(m) { medMap[m.id] = m; if (m.parcela_id) parcIds.push(m.parcela_id); });
-
-        var parcResult = await db.from('parcelas').select('id, numero, proyecto_id, cliente_id').in('id', parcIds);
-        var parcelas = parcResult.data || [];
-
-        var parcMap = {}; var clienteIds = []; var proyectoIds = [];
-        parcelas.forEach(function(p) {
-            parcMap[p.id] = p;
-            if (p.cliente_id && clienteIds.indexOf(p.cliente_id) === -1) clienteIds.push(p.cliente_id);
-            if (proyectoIds.indexOf(p.proyecto_id) === -1) proyectoIds.push(p.proyecto_id);
-        });
-
-        var cliRes = clienteIds.length > 0 ? await db.from('clientes').select('id, nombre').in('id', clienteIds) : { data: [] };
-        var proyRes = await db.from('proyectos').select('id, nombre').in('id', proyectoIds);
-
-        var cliMap = {}; (cliRes.data || []).forEach(function(c) { cliMap[c.id] = c.nombre; });
-        var proyMap = {}; (proyRes.data || []).forEach(function(p) { proyMap[p.id] = p.nombre; });
+        await loadAllData();
+        var medMap = makeMap(CACHE.medidores, 'id');
+        var parcMap = makeMap(CACHE.parcelas, 'id');
+        var cliMap = makeMap(CACHE.clientes, 'id');
+        var proyMap = makeMap(CACHE.proyectos, 'id');
 
         var select = document.getElementById('lecturasProyecto');
-        if (select.options.length <= 1 && proyRes.data) {
-            proyRes.data.forEach(function(p) {
+        if (select.options.length <= 1) {
+            CACHE.proyectos.forEach(function(p) {
                 var opt = document.createElement('option');
-                opt.value = p.id;
-                opt.textContent = p.nombre;
+                opt.value = p.id; opt.textContent = p.nombre;
                 select.appendChild(opt);
             });
         }
 
-        allLecturas = lecturas.map(function(l) {
+        allLecturas = CACHE.lecturas.map(function(l) {
             var med = medMap[l.medidor_id] || {};
             var parc = parcMap[med.parcela_id] || {};
+            var cli = cliMap[parc.cliente_id] || {};
+            var proy = proyMap[parc.proyecto_id] || {};
             return {
-                id: l.id, fecha: l.fecha, lectura_kwh: l.lectura_kwh, consumo_kwh: l.consumo_kwh, medidor_id: l.medidor_id,
-                parcela_numero: parc.numero || '-',
-                proyecto_id: parc.proyecto_id,
-                proyecto_nombre: proyMap[parc.proyecto_id] || '-',
-                cliente_nombre: cliMap[parc.cliente_id] || '-'
+                id: l.id, fecha_lectura: l.fecha_lectura, lectura_kwh: l.lectura_kwh, consumo_periodo: l.consumo_periodo,
+                medidor_id: l.medidor_id, parcela_numero: parc.numero || '-',
+                proyecto_id: parc.proyecto_id, proyecto_nombre: proy.nombre || '-',
+                cliente_nombre: cli.nombre_completo || '-'
             };
         });
 
@@ -1022,12 +955,12 @@ function renderLecturas(lecturas) {
     var html = '';
     lecturas.forEach(function(l) {
         html += '<tr>';
-        html += '<td>' + formatDate(l.fecha) + '</td>';
+        html += '<td>' + formatDate(l.fecha_lectura) + '</td>';
         html += '<td>' + l.cliente_nombre + '</td>';
         html += '<td>' + l.parcela_numero + '</td>';
         html += '<td>' + l.proyecto_nombre + '</td>';
         html += '<td>' + (l.lectura_kwh || 0) + ' kWh</td>';
-        html += '<td><strong>' + (l.consumo_kwh || 0) + ' kWh</strong></td>';
+        html += '<td><strong>' + (l.consumo_periodo || 0) + ' kWh</strong></td>';
         html += '</tr>';
     });
     document.getElementById('lecturasTable').innerHTML = html;
