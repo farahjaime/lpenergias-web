@@ -8,11 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* ============================================
-           LP ENERGIAS - PORTAL ADMIN
-           Colores: Verde #4a9e4a | Amarillo #e8a838
-           ============================================ */
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
@@ -22,7 +17,6 @@
             min-height: 100vh;
         }
 
-        /* --- LOGIN PAGE --- */
         .login-container {
             min-height: 100vh;
             display: flex;
@@ -102,14 +96,8 @@
             transition: background 0.2s;
         }
 
-        .btn-login:hover {
-            background: #3d8b3d;
-        }
-
-        .btn-login:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
+        .btn-login:hover { background: #3d8b3d; }
+        .btn-login:disabled { background: #ccc; cursor: not-allowed; }
 
         .login-error {
             background: #fff0f0;
@@ -121,22 +109,14 @@
             display: none;
         }
 
-        /* --- LAYOUT PRINCIPAL --- */
-        .app-layout {
-            display: none;
-            min-height: 100vh;
-        }
+        .app-layout { display: none; min-height: 100vh; }
 
-        /* Sidebar */
         .sidebar {
             position: fixed;
-            left: 0;
-            top: 0;
-            bottom: 0;
+            left: 0; top: 0; bottom: 0;
             width: 260px;
             background: #1a1a2e;
             color: white;
-            padding: 0;
             z-index: 100;
             overflow-y: auto;
             transition: transform 0.3s;
@@ -147,29 +127,12 @@
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
-        .sidebar-header h2 {
-            font-size: 20px;
-            font-weight: 700;
-        }
+        .sidebar-header h2 { font-size: 20px; font-weight: 700; }
+        .sidebar-header h2 span { color: #4a9e4a; }
+        .sidebar-header p { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 4px; }
 
-        .sidebar-header h2 span {
-            color: #4a9e4a;
-        }
-
-        .sidebar-header p {
-            font-size: 12px;
-            color: rgba(255,255,255,0.5);
-            margin-top: 4px;
-        }
-
-        .sidebar-nav {
-            padding: 16px 0;
-        }
-
-        .nav-section {
-            padding: 0 16px;
-            margin-bottom: 8px;
-        }
+        .sidebar-nav { padding: 16px 0; }
+        .nav-section { padding: 0 16px; margin-bottom: 8px; }
 
         .nav-section-title {
             font-size: 10px;
@@ -188,66 +151,34 @@
             border-radius: 8px;
             cursor: pointer;
             font-size: 14px;
-            font-weight: 400;
             color: rgba(255,255,255,0.7);
             transition: all 0.15s;
             text-decoration: none;
         }
 
-        .nav-item:hover {
-            background: rgba(255,255,255,0.08);
-            color: white;
-        }
-
-        .nav-item.active {
-            background: rgba(74, 158, 74, 0.2);
-            color: #4a9e4a;
-            font-weight: 500;
-        }
-
-        .nav-icon {
-            width: 20px;
-            text-align: center;
-            font-size: 16px;
-        }
+        .nav-item:hover { background: rgba(255,255,255,0.08); color: white; }
+        .nav-item.active { background: rgba(74,158,74,0.2); color: #4a9e4a; font-weight: 500; }
+        .nav-icon { width: 20px; text-align: center; font-size: 16px; }
 
         .sidebar-footer {
             position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
+            bottom: 0; left: 0; right: 0;
             padding: 16px 20px;
             border-top: 1px solid rgba(255,255,255,0.1);
         }
 
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 12px;
-        }
+        .user-info { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
 
         .user-avatar {
-            width: 36px;
-            height: 36px;
+            width: 36px; height: 36px;
             border-radius: 50%;
             background: #4a9e4a;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            font-size: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 600; font-size: 14px;
         }
 
-        .user-name {
-            font-size: 13px;
-            font-weight: 500;
-        }
-
-        .user-email {
-            font-size: 11px;
-            color: rgba(255,255,255,0.5);
-        }
+        .user-name { font-size: 13px; font-weight: 500; }
+        .user-email { font-size: 11px; color: rgba(255,255,255,0.5); }
 
         .btn-logout {
             width: 100%;
@@ -259,39 +190,16 @@
             font-size: 13px;
             cursor: pointer;
             font-family: 'Inter', sans-serif;
-            transition: all 0.2s;
         }
 
-        .btn-logout:hover {
-            background: rgba(211, 47, 47, 0.2);
-            color: #ff6b6b;
-            border-color: rgba(211, 47, 47, 0.3);
-        }
+        .btn-logout:hover { background: rgba(211,47,47,0.2); color: #ff6b6b; border-color: rgba(211,47,47,0.3); }
 
-        /* Main Content */
-        .main-content {
-            margin-left: 260px;
-            padding: 32px;
-            min-height: 100vh;
-        }
+        .main-content { margin-left: 260px; padding: 32px; min-height: 100vh; }
 
-        .page-header {
-            margin-bottom: 28px;
-        }
+        .page-header { margin-bottom: 28px; }
+        .page-header h1 { font-size: 26px; font-weight: 700; color: #1a1a2e; }
+        .page-header p { font-size: 14px; color: #666; margin-top: 4px; }
 
-        .page-header h1 {
-            font-size: 26px;
-            font-weight: 700;
-            color: #1a1a2e;
-        }
-
-        .page-header p {
-            font-size: 14px;
-            color: #666;
-            margin-top: 4px;
-        }
-
-        /* Stats Cards */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -307,32 +215,14 @@
             border: 1px solid #e8e8e8;
         }
 
-        .stat-card .stat-label {
-            font-size: 12px;
-            font-weight: 500;
-            color: #888;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .stat-card .stat-value {
-            font-size: 32px;
-            font-weight: 700;
-            color: #1a1a2e;
-            margin: 8px 0 4px;
-        }
-
-        .stat-card .stat-detail {
-            font-size: 13px;
-            color: #666;
-        }
-
+        .stat-card .stat-label { font-size: 12px; font-weight: 500; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-card .stat-value { font-size: 32px; font-weight: 700; color: #1a1a2e; margin: 8px 0 4px; }
+        .stat-card .stat-detail { font-size: 13px; color: #666; }
         .stat-card.green { border-top: 3px solid #4a9e4a; }
         .stat-card.yellow { border-top: 3px solid #e8a838; }
         .stat-card.blue { border-top: 3px solid #3b82f6; }
         .stat-card.red { border-top: 3px solid #ef4444; }
 
-        /* Tables */
         .card {
             background: white;
             border-radius: 12px;
@@ -349,23 +239,11 @@
             align-items: center;
         }
 
-        .card-header h3 {
-            font-size: 16px;
-            font-weight: 600;
-        }
+        .card-header h3 { font-size: 16px; font-weight: 600; }
+        .card-body { padding: 0; }
+        .card-body.padded { padding: 24px; }
 
-        .card-body {
-            padding: 0;
-        }
-
-        .card-body.padded {
-            padding: 24px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+        table { width: 100%; border-collapse: collapse; }
 
         th {
             text-align: left;
@@ -379,55 +257,17 @@
             border-bottom: 1px solid #eee;
         }
 
-        td {
-            padding: 14px 16px;
-            font-size: 14px;
-            border-bottom: 1px solid #f0f0f0;
-        }
+        td { padding: 14px 16px; font-size: 14px; border-bottom: 1px solid #f0f0f0; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: #f8f9fa; }
 
-        tr:last-child td {
-            border-bottom: none;
-        }
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+        .badge-green { background: #e8f5e9; color: #2e7d32; }
+        .badge-yellow { background: #fff8e1; color: #f57f17; }
+        .badge-red { background: #ffebee; color: #c62828; }
+        .badge-gray { background: #f5f5f5; color: #666; }
 
-        tr:hover td {
-            background: #f8f9fa;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        .badge-green {
-            background: #e8f5e9;
-            color: #2e7d32;
-        }
-
-        .badge-yellow {
-            background: #fff8e1;
-            color: #f57f17;
-        }
-
-        .badge-red {
-            background: #ffebee;
-            color: #c62828;
-        }
-
-        .badge-gray {
-            background: #f5f5f5;
-            color: #666;
-        }
-
-        /* Search & Filters */
-        .toolbar {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
+        .toolbar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
 
         .search-box {
             padding: 8px 14px;
@@ -437,12 +277,9 @@
             font-family: 'Inter', sans-serif;
             width: 240px;
             outline: none;
-            transition: border-color 0.2s;
         }
 
-        .search-box:focus {
-            border-color: #4a9e4a;
-        }
+        .search-box:focus { border-color: #4a9e4a; }
 
         .filter-select {
             padding: 8px 14px;
@@ -455,31 +292,11 @@
             cursor: pointer;
         }
 
-        /* Detail View */
-        .detail-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-        }
+        .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
 
-        .detail-field {
-            margin-bottom: 16px;
-        }
-
-        .detail-field label {
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: #888;
-            display: block;
-            margin-bottom: 4px;
-        }
-
-        .detail-field span {
-            font-size: 15px;
-            color: #1a1a2e;
-        }
+        .detail-field { margin-bottom: 16px; }
+        .detail-field label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #888; display: block; margin-bottom: 4px; }
+        .detail-field span { font-size: 15px; color: #1a1a2e; }
 
         .btn-back {
             display: inline-flex;
@@ -494,26 +311,16 @@
             cursor: pointer;
             font-family: 'Inter', sans-serif;
             color: #444;
-            transition: all 0.2s;
             margin-bottom: 20px;
         }
 
-        .btn-back:hover {
-            border-color: #4a9e4a;
-            color: #4a9e4a;
-        }
+        .btn-back:hover { border-color: #4a9e4a; color: #4a9e4a; }
 
-        /* Loading */
-        .loading {
-            text-align: center;
-            padding: 60px 20px;
-            color: #888;
-        }
+        .loading { text-align: center; padding: 60px 20px; color: #888; }
 
         .loading .spinner {
             display: inline-block;
-            width: 40px;
-            height: 40px;
+            width: 40px; height: 40px;
             border: 3px solid #e0e0e0;
             border-top-color: #4a9e4a;
             border-radius: 50%;
@@ -521,17 +328,12 @@
             margin-bottom: 12px;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* Mobile */
         .mobile-header {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
+            top: 0; left: 0; right: 0;
             height: 56px;
             background: #1a1a2e;
             color: white;
@@ -541,159 +343,35 @@
             z-index: 101;
         }
 
-        .mobile-header h2 {
-            font-size: 18px;
-        }
+        .mobile-header h2 { font-size: 18px; }
+        .mobile-header h2 span { color: #4a9e4a; }
+        .btn-menu { background: none; border: none; color: white; font-size: 24px; cursor: pointer; padding: 4px; }
 
-        .mobile-header h2 span {
-            color: #4a9e4a;
-        }
-
-        .btn-menu {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-            padding: 4px;
-        }
-
-        .sidebar-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 99;
-        }
+        .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 99; }
 
         @media (max-width: 768px) {
-            .mobile-header {
-                display: flex;
-            }
-
-            .sidebar {
-                transform: translateX(-100%);
-            }
-
-            .sidebar.open {
-                transform: translateX(0);
-            }
-
-            .sidebar-overlay.open {
-                display: block;
-            }
-
-            .main-content {
-                margin-left: 0;
-                padding: 72px 16px 24px;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 12px;
-            }
-
-            .stat-card {
-                padding: 16px;
-            }
-
-            .stat-card .stat-value {
-                font-size: 24px;
-            }
-
-            .detail-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .search-box {
-                width: 100%;
-            }
-
-            .toolbar {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            table {
-                font-size: 13px;
-            }
-
-            th, td {
-                padding: 10px 12px;
-            }
+            .mobile-header { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .sidebar-overlay.open { display: block; }
+            .main-content { margin-left: 0; padding: 72px 16px 24px; }
+            .stats-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+            .stat-card { padding: 16px; }
+            .stat-card .stat-value { font-size: 24px; }
+            .detail-grid { grid-template-columns: 1fr; }
+            .search-box { width: 100%; }
+            .toolbar { flex-direction: column; align-items: stretch; }
         }
 
-        /* Page transitions */
         .page { display: none; }
         .page.active { display: block; }
-
-        /* Empty state */
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #888;
-        }
-
-        .empty-state svg {
-            width: 64px;
-            height: 64px;
-            fill: #ddd;
-            margin-bottom: 16px;
-        }
-
-        /* Click row */
-        .clickable-row {
-            cursor: pointer;
-        }
-
-        .clickable-row:hover td {
-            background: #f0f7f0;
-        }
-
-        /* Lecturas chart placeholder */
-        .chart-container {
-            height: 200px;
-            display: flex;
-            align-items: flex-end;
-            gap: 4px;
-            padding: 20px 24px;
-        }
-
-        .chart-bar-group {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .chart-bar {
-            width: 100%;
-            max-width: 40px;
-            background: #4a9e4a;
-            border-radius: 4px 4px 0 0;
-            min-height: 4px;
-            transition: height 0.5s;
-        }
-
-        .chart-label {
-            font-size: 10px;
-            color: #888;
-            margin-top: 4px;
-        }
-
-        .chart-value {
-            font-size: 11px;
-            font-weight: 600;
-            color: #444;
-        }
+        .empty-state { text-align: center; padding: 60px 20px; color: #888; }
+        .clickable-row { cursor: pointer; }
+        .clickable-row:hover td { background: #f0f7f0; }
     </style>
 </head>
 <body>
 
-<!-- ============================================
-     LOGIN PAGE
-     ============================================ -->
 <div id="loginPage" class="login-container">
     <div class="login-box">
         <div class="login-logo">
@@ -715,12 +393,7 @@
     </div>
 </div>
 
-<!-- ============================================
-     APP LAYOUT (visible after login)
-     ============================================ -->
 <div id="appLayout" class="app-layout">
-
-    <!-- Mobile header -->
     <div class="mobile-header">
         <button class="btn-menu" onclick="toggleSidebar()">&#9776;</button>
         <h2>LP <span>Energias</span></h2>
@@ -728,7 +401,6 @@
     </div>
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
-    <!-- Sidebar -->
     <nav class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <h2>LP <span>Energias</span></h2>
@@ -777,17 +449,14 @@
         </div>
     </nav>
 
-    <!-- Main Content Area -->
     <main class="main-content">
-
-        <!-- ====== DASHBOARD ====== -->
+        <!-- DASHBOARD -->
         <div id="page-dashboard" class="page active">
             <div class="page-header">
                 <h1>Dashboard</h1>
                 <p>Resumen general de LP Energias</p>
             </div>
-
-            <div class="stats-grid" id="dashboardStats">
+            <div class="stats-grid">
                 <div class="stat-card green">
                     <div class="stat-label">Clientes totales</div>
                     <div class="stat-value" id="statClientes">-</div>
@@ -810,237 +479,130 @@
                 </div>
             </div>
 
-            <!-- Clientes por proyecto -->
             <div class="card">
-                <div class="card-header">
-                    <h3>Clientes por proyecto</h3>
-                </div>
+                <div class="card-header"><h3>Clientes por proyecto</h3></div>
                 <div class="card-body">
                     <table>
-                        <thead>
-                            <tr>
-                                <th>Proyecto</th>
-                                <th>Parcelas</th>
-                                <th>Clientes</th>
-                                <th>Medidores</th>
-                                <th>Conexion</th>
-                            </tr>
-                        </thead>
-                        <tbody id="dashboardProyectos">
-                            <tr><td colspan="5" class="loading"><div class="spinner"></div><br>Cargando datos...</td></tr>
-                        </tbody>
+                        <thead><tr><th>Proyecto</th><th>Parcelas</th><th>Clientes</th><th>Medidores</th><th>Conexion</th></tr></thead>
+                        <tbody id="dashboardProyectos"><tr><td colspan="5" class="loading"><div class="spinner"></div><br>Cargando datos...</td></tr></tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Ultimas lecturas -->
             <div class="card">
-                <div class="card-header">
-                    <h3>Ultimas lecturas registradas</h3>
-                </div>
+                <div class="card-header"><h3>Ultimas lecturas registradas</h3></div>
                 <div class="card-body">
                     <table>
-                        <thead>
-                            <tr>
-                                <th>Fecha</th>
-                                <th>Cliente</th>
-                                <th>Parcela</th>
-                                <th>Lectura (kWh)</th>
-                                <th>Consumo</th>
-                            </tr>
-                        </thead>
-                        <tbody id="dashboardLecturas">
-                            <tr><td colspan="5" class="loading"><div class="spinner"></div><br>Cargando datos...</td></tr>
-                        </tbody>
+                        <thead><tr><th>Fecha</th><th>Cliente</th><th>Parcela</th><th>Lectura (kWh)</th><th>Consumo</th></tr></thead>
+                        <tbody id="dashboardLecturas"><tr><td colspan="5" class="loading"><div class="spinner"></div><br>Cargando datos...</td></tr></tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- ====== CLIENTES ====== -->
+        <!-- CLIENTES -->
         <div id="page-clientes" class="page">
-            <div class="page-header">
-                <h1>Clientes</h1>
-                <p>Listado de todos los clientes registrados</p>
-            </div>
-
+            <div class="page-header"><h1>Clientes</h1><p>Listado de todos los clientes registrados</p></div>
             <div class="card">
                 <div class="card-header">
                     <h3 id="clientesCount">Clientes</h3>
                     <div class="toolbar">
                         <input type="text" class="search-box" id="clientesSearch" placeholder="Buscar por nombre..." oninput="filterClientes()">
-                        <select class="filter-select" id="clientesProyecto" onchange="filterClientes()">
-                            <option value="">Todos los proyectos</option>
-                        </select>
+                        <select class="filter-select" id="clientesProyecto" onchange="filterClientes()"><option value="">Todos los proyectos</option></select>
                     </div>
                 </div>
                 <div class="card-body">
                     <table>
-                        <thead>
-                            <tr>
-                                <th>Cliente</th>
-                                <th>Parcela</th>
-                                <th>Proyecto</th>
-                                <th>Medidor</th>
-                                <th>Estado</th>
-                            </tr>
-                        </thead>
-                        <tbody id="clientesTable">
-                            <tr><td colspan="5" class="loading"><div class="spinner"></div><br>Cargando clientes...</td></tr>
-                        </tbody>
+                        <thead><tr><th>Cliente</th><th>Parcela</th><th>Proyecto</th><th>Medidor</th><th>Estado</th></tr></thead>
+                        <tbody id="clientesTable"><tr><td colspan="5" class="loading"><div class="spinner"></div><br>Cargando clientes...</td></tr></tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- ====== CLIENTE DETALLE ====== -->
+        <!-- CLIENTE DETALLE -->
         <div id="page-cliente-detalle" class="page">
             <button class="btn-back" onclick="navigateTo('clientes')">&larr; Volver a clientes</button>
-            <div class="page-header">
-                <h1 id="detalleNombre">Cliente</h1>
-                <p id="detalleSubtitulo"></p>
-            </div>
+            <div class="page-header"><h1 id="detalleNombre">Cliente</h1><p id="detalleSubtitulo"></p></div>
             <div class="detail-grid">
-                <div class="card">
-                    <div class="card-header"><h3>Datos del cliente</h3></div>
-                    <div class="card-body padded" id="detalleDatos"></div>
-                </div>
-                <div class="card">
-                    <div class="card-header"><h3>Medidor</h3></div>
-                    <div class="card-body padded" id="detalleMedidor"></div>
-                </div>
+                <div class="card"><div class="card-header"><h3>Datos del cliente</h3></div><div class="card-body padded" id="detalleDatos"></div></div>
+                <div class="card"><div class="card-header"><h3>Medidor</h3></div><div class="card-body padded" id="detalleMedidor"></div></div>
             </div>
             <div class="card" style="margin-top:24px;">
                 <div class="card-header"><h3>Historial de lecturas</h3></div>
                 <div class="card-body">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Fecha</th>
-                                <th>Lectura (kWh)</th>
-                                <th>Consumo</th>
-                            </tr>
-                        </thead>
-                        <tbody id="detalleLecturas"></tbody>
-                    </table>
+                    <table><thead><tr><th>Fecha</th><th>Lectura (kWh)</th><th>Consumo</th></tr></thead><tbody id="detalleLecturas"></tbody></table>
                 </div>
             </div>
         </div>
 
-        <!-- ====== PARCELAS ====== -->
+        <!-- PARCELAS -->
         <div id="page-parcelas" class="page">
-            <div class="page-header">
-                <h1>Parcelas</h1>
-                <p>Listado de todas las parcelas por proyecto</p>
-            </div>
+            <div class="page-header"><h1>Parcelas</h1><p>Listado de todas las parcelas por proyecto</p></div>
             <div class="card">
                 <div class="card-header">
                     <h3 id="parcelasCount">Parcelas</h3>
                     <div class="toolbar">
-                        <select class="filter-select" id="parcelasProyecto" onchange="filterParcelas()">
-                            <option value="">Todos los proyectos</option>
-                        </select>
-                        <select class="filter-select" id="parcelasEstado" onchange="filterParcelas()">
-                            <option value="">Todos los estados</option>
-                            <option value="conectada">Conectadas</option>
-                            <option value="no_conectada">Sin conectar</option>
-                        </select>
+                        <select class="filter-select" id="parcelasProyecto" onchange="filterParcelas()"><option value="">Todos los proyectos</option></select>
+                        <select class="filter-select" id="parcelasEstado" onchange="filterParcelas()"><option value="">Todos los estados</option><option value="conectada">Conectadas</option><option value="no_conectada">Sin conectar</option></select>
                     </div>
                 </div>
                 <div class="card-body">
                     <table>
-                        <thead>
-                            <tr>
-                                <th>Parcela</th>
-                                <th>Proyecto</th>
-                                <th>Cuartel</th>
-                                <th>Cliente</th>
-                                <th>Medidor</th>
-                                <th>Estado</th>
-                            </tr>
-                        </thead>
-                        <tbody id="parcelasTable">
-                            <tr><td colspan="6" class="loading"><div class="spinner"></div><br>Cargando parcelas...</td></tr>
-                        </tbody>
+                        <thead><tr><th>Parcela</th><th>Proyecto</th><th>Cuartel</th><th>Cliente</th><th>Medidor</th><th>Estado</th></tr></thead>
+                        <tbody id="parcelasTable"><tr><td colspan="6" class="loading"><div class="spinner"></div><br>Cargando parcelas...</td></tr></tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- ====== LECTURAS ====== -->
+        <!-- LECTURAS -->
         <div id="page-lecturas" class="page">
-            <div class="page-header">
-                <h1>Lecturas</h1>
-                <p>Historial de lecturas de medidores</p>
-            </div>
+            <div class="page-header"><h1>Lecturas</h1><p>Historial de lecturas de medidores</p></div>
             <div class="card">
                 <div class="card-header">
                     <h3 id="lecturasCount">Lecturas</h3>
                     <div class="toolbar">
                         <input type="text" class="search-box" id="lecturasSearch" placeholder="Buscar por cliente o parcela..." oninput="filterLecturas()">
-                        <select class="filter-select" id="lecturasProyecto" onchange="filterLecturas()">
-                            <option value="">Todos los proyectos</option>
-                        </select>
+                        <select class="filter-select" id="lecturasProyecto" onchange="filterLecturas()"><option value="">Todos los proyectos</option></select>
                     </div>
                 </div>
                 <div class="card-body">
                     <table>
-                        <thead>
-                            <tr>
-                                <th>Fecha</th>
-                                <th>Cliente</th>
-                                <th>Parcela</th>
-                                <th>Proyecto</th>
-                                <th>Lectura (kWh)</th>
-                                <th>Consumo</th>
-                            </tr>
-                        </thead>
-                        <tbody id="lecturasTable">
-                            <tr><td colspan="6" class="loading"><div class="spinner"></div><br>Cargando lecturas...</td></tr>
-                        </tbody>
+                        <thead><tr><th>Fecha</th><th>Cliente</th><th>Parcela</th><th>Proyecto</th><th>Lectura (kWh)</th><th>Consumo</th></tr></thead>
+                        <tbody id="lecturasTable"><tr><td colspan="6" class="loading"><div class="spinner"></div><br>Cargando lecturas...</td></tr></tbody>
                     </table>
                 </div>
             </div>
         </div>
-
     </main>
 </div>
 
 <script>
-// ============================================
-// CONFIGURACION SUPABASE
-// ============================================
-// IMPORTANTE: Reemplaza estos valores con los de tu proyecto Supabase
-const SUPABASE_URL = 'https://mfyusyjvwxddulvswepi.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1meXVzeWp2d3hkZHVsdnN3ZXBpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NTA5NzEsImV4cCI6MjA5MjAyNjk3MX0.Jtw-a-GzcaLQk06JlXxezTtt4LApe8RX6nPWGxae4TU';
+var SUPABASE_URL = 'https://mfyusyjvwxddulvswepi.supabase.co';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1meXVzeWp2d3hkZHVsdnN3ZXBpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NTA5NzEsImV4cCI6MjA5MjAyNjk3MX0.Jtw-a-GzcaLQk06JlXxezTtt4LApe8RX6nPWGxae4TU';
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+var db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// ============================================
-// ESTADO GLOBAL
-// ============================================
-let allClientes = [];
-let allParcelas = [];
-let allLecturas = [];
-let proyectosMap = {};
+var allClientes = [];
+var allParcelas = [];
+var allLecturas = [];
+var proyectosMap = {};
 
-// ============================================
-// AUTENTICACION
-// ============================================
 async function handleLogin(e) {
     e.preventDefault();
-    const btn = document.getElementById('btnLogin');
-    const errorDiv = document.getElementById('loginError');
+    var btn = document.getElementById('btnLogin');
+    var errorDiv = document.getElementById('loginError');
     btn.disabled = true;
     btn.textContent = 'Ingresando...';
     errorDiv.style.display = 'none';
 
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
+    var email = document.getElementById('loginEmail').value;
+    var password = document.getElementById('loginPassword').value;
 
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    var result = await db.auth.signInWithPassword({ email: email, password: password });
 
-    if (error) {
+    if (result.error) {
         errorDiv.textContent = 'Correo o contrasena incorrectos. Intenta de nuevo.';
         errorDiv.style.display = 'block';
         btn.disabled = false;
@@ -1048,55 +610,42 @@ async function handleLogin(e) {
         return;
     }
 
-    showApp(data.user);
+    showApp(result.data.user);
 }
 
 async function handleLogout() {
-    await supabase.auth.signOut();
+    await db.auth.signOut();
     document.getElementById('appLayout').style.display = 'none';
     document.getElementById('loginPage').style.display = 'flex';
 }
 
 async function checkSession() {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session) {
-        showApp(session.user);
+    var result = await db.auth.getSession();
+    if (result.data.session) {
+        showApp(result.data.session.user);
     }
 }
 
 function showApp(user) {
     document.getElementById('loginPage').style.display = 'none';
     document.getElementById('appLayout').style.display = 'block';
-
-    // Set user info
-    const email = user.email || '';
+    var email = user.email || '';
     document.getElementById('userEmail').textContent = email;
     document.getElementById('userName').textContent = email.split('@')[0];
     document.getElementById('userAvatar').textContent = email.charAt(0).toUpperCase();
-
     loadDashboard();
 }
 
-// ============================================
-// NAVEGACION
-// ============================================
 function navigateTo(page) {
-    // Hide all pages
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-item[data-page]').forEach(n => n.classList.remove('active'));
-
-    // Show target page
+    document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+    document.querySelectorAll('.nav-item[data-page]').forEach(function(n) { n.classList.remove('active'); });
     document.getElementById('page-' + page).classList.add('active');
-    const navItem = document.querySelector('.nav-item[data-page="' + page + '"]');
+    var navItem = document.querySelector('.nav-item[data-page="' + page + '"]');
     if (navItem) navItem.classList.add('active');
-
-    // Load data
     if (page === 'dashboard') loadDashboard();
     if (page === 'clientes') loadClientes();
     if (page === 'parcelas') loadParcelas();
     if (page === 'lecturas') loadLecturas();
-
-    // Close mobile sidebar
     document.getElementById('sidebar').classList.remove('open');
     document.getElementById('sidebarOverlay').classList.remove('open');
 }
@@ -1106,66 +655,45 @@ function toggleSidebar() {
     document.getElementById('sidebarOverlay').classList.toggle('open');
 }
 
-// ============================================
-// DASHBOARD
-// ============================================
 async function loadDashboard() {
     try {
-        // Load counts
-        const [clientesRes, medidoresRes, parcelasRes, lecturasRes] = await Promise.all([
-            supabase.from('clientes').select('id', { count: 'exact', head: true }),
-            supabase.from('medidores').select('id', { count: 'exact', head: true }),
-            supabase.from('parcelas').select('id', { count: 'exact', head: true }),
-            supabase.from('lecturas').select('id', { count: 'exact', head: true })
-        ]);
+        var r1 = await db.from('clientes').select('id', { count: 'exact', head: true });
+        var r2 = await db.from('medidores').select('id', { count: 'exact', head: true });
+        var r3 = await db.from('parcelas').select('id', { count: 'exact', head: true });
+        var r4 = await db.from('lecturas').select('id', { count: 'exact', head: true });
 
-        document.getElementById('statClientes').textContent = clientesRes.count || 0;
-        document.getElementById('statMedidores').textContent = medidoresRes.count || 0;
-        document.getElementById('statParcelas').textContent = parcelasRes.count || 0;
-        document.getElementById('statLecturas').textContent = lecturasRes.count || 0;
-
-        // Detail texts
+        document.getElementById('statClientes').textContent = r1.count || 0;
+        document.getElementById('statMedidores').textContent = r2.count || 0;
+        document.getElementById('statParcelas').textContent = r3.count || 0;
+        document.getElementById('statLecturas').textContent = r4.count || 0;
         document.getElementById('statClientesDetail').textContent = 'En 3 proyectos';
         document.getElementById('statMedidoresDetail').textContent = 'Conectados y en servicio';
         document.getElementById('statParcelasDetail').textContent = 'Registradas en el sistema';
         document.getElementById('statLecturasDetail').textContent = 'Registros historicos';
 
-        // Load projects summary
-        const { data: proyectos } = await supabase
-            .from('proyectos')
-            .select('id, nombre')
-            .order('nombre');
+        var proyResult = await db.from('proyectos').select('id, nombre').order('nombre');
+        var proyectos = proyResult.data;
 
         if (proyectos) {
-            let html = '';
-            for (const p of proyectos) {
+            var html = '';
+            for (var i = 0; i < proyectos.length; i++) {
+                var p = proyectos[i];
                 proyectosMap[p.id] = p.nombre;
 
-                const [parcCnt, cliCnt, medCnt] = await Promise.all([
-                    supabase.from('parcelas').select('id', { count: 'exact', head: true }).eq('proyecto_id', p.id),
-                    supabase.from('clientes').select('id', { count: 'exact', head: true }).eq('proyecto_id', p.id),
-                    supabase.from('medidores').select('id', { count: 'exact', head: true }).eq('parcela_id', null) // We'll handle this differently
-                ]);
+                var parcCnt = await db.from('parcelas').select('id', { count: 'exact', head: true }).eq('proyecto_id', p.id);
+                var cliCnt = await db.from('clientes').select('id', { count: 'exact', head: true }).eq('proyecto_id', p.id);
 
-                // Get medidores for this project (through parcelas)
-                const { data: parcelasProj } = await supabase
-                    .from('parcelas')
-                    .select('id')
-                    .eq('proyecto_id', p.id);
-
-                let medCount = 0;
-                if (parcelasProj && parcelasProj.length > 0) {
-                    const parcelaIds = parcelasProj.map(pp => pp.id);
-                    const { count } = await supabase
-                        .from('medidores')
-                        .select('id', { count: 'exact', head: true })
-                        .in('parcela_id', parcelaIds);
-                    medCount = count || 0;
+                var parcelasProj = await db.from('parcelas').select('id').eq('proyecto_id', p.id);
+                var medCount = 0;
+                if (parcelasProj.data && parcelasProj.data.length > 0) {
+                    var parcelaIds = parcelasProj.data.map(function(pp) { return pp.id; });
+                    var medRes = await db.from('medidores').select('id', { count: 'exact', head: true }).in('parcela_id', parcelaIds);
+                    medCount = medRes.count || 0;
                 }
 
-                const parcTotal = parcCnt.count || 0;
-                const cliTotal = cliCnt.count || 0;
-                const pct = parcTotal > 0 ? Math.round((medCount / parcTotal) * 100) : 0;
+                var parcTotal = parcCnt.count || 0;
+                var cliTotal = cliCnt.count || 0;
+                var pct = parcTotal > 0 ? Math.round((medCount / parcTotal) * 100) : 0;
 
                 html += '<tr>';
                 html += '<td><strong>' + p.nombre + '</strong></td>';
@@ -1178,131 +706,81 @@ async function loadDashboard() {
             document.getElementById('dashboardProyectos').innerHTML = html;
         }
 
-        // Load latest lecturas
-        const { data: lecturas } = await supabase
-            .from('lecturas')
-            .select('id, fecha, lectura_kwh, consumo_kwh, medidor_id')
-            .order('fecha', { ascending: false })
-            .limit(10);
+        var lectResult = await db.from('lecturas').select('id, fecha, lectura_kwh, consumo_kwh, medidor_id').order('fecha', { ascending: false }).limit(10);
+        var lecturas = lectResult.data;
 
         if (lecturas && lecturas.length > 0) {
-            // Get medidor details
-            const medidorIds = [...new Set(lecturas.map(l => l.medidor_id))];
-            const { data: medidores } = await supabase
-                .from('medidores')
-                .select('id, parcela_id, numero_medidor')
-                .in('id', medidorIds);
+            var medidorIds = [];
+            lecturas.forEach(function(l) { if (medidorIds.indexOf(l.medidor_id) === -1) medidorIds.push(l.medidor_id); });
+            var medResult = await db.from('medidores').select('id, parcela_id, numero_medidor').in('id', medidorIds);
+            var medidores = medResult.data || [];
 
-            const medidorMap = {};
-            const parcelaIds = [];
-            if (medidores) {
-                medidores.forEach(m => {
-                    medidorMap[m.id] = m;
-                    if (m.parcela_id) parcelaIds.push(m.parcela_id);
-                });
-            }
+            var medidorMap = {};
+            var parcIds = [];
+            medidores.forEach(function(m) { medidorMap[m.id] = m; if (m.parcela_id) parcIds.push(m.parcela_id); });
 
-            const { data: parcelas } = await supabase
-                .from('parcelas')
-                .select('id, numero, proyecto_id, cliente_id')
-                .in('id', parcelaIds);
+            var parcResult2 = await db.from('parcelas').select('id, numero, proyecto_id, cliente_id').in('id', parcIds);
+            var parcelas2 = parcResult2.data || [];
 
-            const parcelaMap = {};
-            const clienteIds = [];
-            if (parcelas) {
-                parcelas.forEach(p => {
-                    parcelaMap[p.id] = p;
-                    if (p.cliente_id) clienteIds.push(p.cliente_id);
-                });
-            }
+            var parcelaMap = {};
+            var clienteIds2 = [];
+            parcelas2.forEach(function(p) { parcelaMap[p.id] = p; if (p.cliente_id) clienteIds2.push(p.cliente_id); });
 
-            const { data: clientes } = await supabase
-                .from('clientes')
-                .select('id, nombre')
-                .in('id', clienteIds);
+            var cliResult2 = await db.from('clientes').select('id, nombre').in('id', clienteIds2);
+            var clientes2 = cliResult2.data || [];
+            var clienteMap = {};
+            clientes2.forEach(function(c) { clienteMap[c.id] = c; });
 
-            const clienteMap = {};
-            if (clientes) {
-                clientes.forEach(c => { clienteMap[c.id] = c; });
-            }
-
-            let html = '';
-            lecturas.forEach(l => {
-                const med = medidorMap[l.medidor_id] || {};
-                const parc = parcelaMap[med.parcela_id] || {};
-                const cli = clienteMap[parc.cliente_id] || {};
-
-                html += '<tr>';
-                html += '<td>' + formatDate(l.fecha) + '</td>';
-                html += '<td>' + (cli.nombre || '-') + '</td>';
-                html += '<td>' + (parc.numero || '-') + '</td>';
-                html += '<td>' + (l.lectura_kwh || 0) + ' kWh</td>';
-                html += '<td><strong>' + (l.consumo_kwh || 0) + ' kWh</strong></td>';
-                html += '</tr>';
+            var html2 = '';
+            lecturas.forEach(function(l) {
+                var med = medidorMap[l.medidor_id] || {};
+                var parc = parcelaMap[med.parcela_id] || {};
+                var cli = clienteMap[parc.cliente_id] || {};
+                html2 += '<tr>';
+                html2 += '<td>' + formatDate(l.fecha) + '</td>';
+                html2 += '<td>' + (cli.nombre || '-') + '</td>';
+                html2 += '<td>' + (parc.numero || '-') + '</td>';
+                html2 += '<td>' + (l.lectura_kwh || 0) + ' kWh</td>';
+                html2 += '<td><strong>' + (l.consumo_kwh || 0) + ' kWh</strong></td>';
+                html2 += '</tr>';
             });
-            document.getElementById('dashboardLecturas').innerHTML = html;
+            document.getElementById('dashboardLecturas').innerHTML = html2;
         } else {
             document.getElementById('dashboardLecturas').innerHTML = '<tr><td colspan="5" class="empty-state">No hay lecturas registradas</td></tr>';
         }
-
     } catch (err) {
         console.error('Error loading dashboard:', err);
     }
 }
 
-// ============================================
-// CLIENTES
-// ============================================
 async function loadClientes() {
     try {
-        const { data: clientes } = await supabase
-            .from('clientes')
-            .select('id, nombre, proyecto_id')
-            .order('nombre');
-
+        var cliResult = await db.from('clientes').select('id, nombre, proyecto_id').order('nombre');
+        var clientes = cliResult.data;
         if (!clientes) return;
 
-        // Load parcelas for these clients
-        const clienteIds = clientes.map(c => c.id);
-        const { data: parcelas } = await supabase
-            .from('parcelas')
-            .select('id, numero, cliente_id, proyecto_id')
-            .in('cliente_id', clienteIds);
+        var clienteIds = clientes.map(function(c) { return c.id; });
+        var parcResult = await db.from('parcelas').select('id, numero, cliente_id, proyecto_id').in('cliente_id', clienteIds);
+        var parcelas = parcResult.data || [];
 
-        const parcelaByCliente = {};
-        const parcelaIds = [];
-        if (parcelas) {
-            parcelas.forEach(p => {
-                parcelaByCliente[p.cliente_id] = p;
-                parcelaIds.push(p.id);
-            });
-        }
+        var parcelaByCliente = {};
+        var parcelaIds = [];
+        parcelas.forEach(function(p) { parcelaByCliente[p.cliente_id] = p; parcelaIds.push(p.id); });
 
-        // Load medidores
-        let medidorByParcela = {};
+        var medidorByParcela = {};
         if (parcelaIds.length > 0) {
-            const { data: medidores } = await supabase
-                .from('medidores')
-                .select('id, numero_medidor, parcela_id')
-                .in('parcela_id', parcelaIds);
-            if (medidores) {
-                medidores.forEach(m => { medidorByParcela[m.parcela_id] = m; });
-            }
+            var medResult = await db.from('medidores').select('id, numero_medidor, parcela_id').in('parcela_id', parcelaIds);
+            (medResult.data || []).forEach(function(m) { medidorByParcela[m.parcela_id] = m; });
         }
 
-        // Load proyectos
-        const { data: proyectos } = await supabase
-            .from('proyectos')
-            .select('id, nombre');
-
-        const proyMap = {};
-        if (proyectos) {
-            proyectos.forEach(p => { proyMap[p.id] = p.nombre; });
-            // Fill filter
-            const select = document.getElementById('clientesProyecto');
+        var proyResult = await db.from('proyectos').select('id, nombre');
+        var proyMap = {};
+        if (proyResult.data) {
+            proyResult.data.forEach(function(p) { proyMap[p.id] = p.nombre; });
+            var select = document.getElementById('clientesProyecto');
             if (select.options.length <= 1) {
-                proyectos.forEach(p => {
-                    const opt = document.createElement('option');
+                proyResult.data.forEach(function(p) {
+                    var opt = document.createElement('option');
                     opt.value = p.id;
                     opt.textContent = p.nombre;
                     select.appendChild(opt);
@@ -1310,11 +788,13 @@ async function loadClientes() {
             }
         }
 
-        allClientes = clientes.map(c => {
-            const parc = parcelaByCliente[c.id] || {};
-            const med = medidorByParcela[parc.id];
+        allClientes = clientes.map(function(c) {
+            var parc = parcelaByCliente[c.id] || {};
+            var med = medidorByParcela[parc.id];
             return {
-                ...c,
+                id: c.id,
+                nombre: c.nombre,
+                proyecto_id: c.proyecto_id,
                 parcela_numero: parc.numero || '-',
                 parcela_id: parc.id,
                 proyecto_nombre: proyMap[c.proyecto_id] || '-',
@@ -1331,14 +811,12 @@ async function loadClientes() {
 
 function renderClientes(clientes) {
     document.getElementById('clientesCount').textContent = clientes.length + ' Clientes';
-
     if (clientes.length === 0) {
         document.getElementById('clientesTable').innerHTML = '<tr><td colspan="5" class="empty-state">No se encontraron clientes</td></tr>';
         return;
     }
-
-    let html = '';
-    clientes.forEach(c => {
+    var html = '';
+    clientes.forEach(function(c) {
         html += '<tr class="clickable-row" onclick="showClienteDetalle(\'' + c.id + '\')">';
         html += '<td><strong>' + c.nombre + '</strong></td>';
         html += '<td>' + c.parcela_numero + '</td>';
@@ -1351,64 +829,42 @@ function renderClientes(clientes) {
 }
 
 function filterClientes() {
-    const search = document.getElementById('clientesSearch').value.toLowerCase();
-    const proyecto = document.getElementById('clientesProyecto').value;
-
-    let filtered = allClientes;
-    if (search) {
-        filtered = filtered.filter(c => c.nombre.toLowerCase().includes(search));
-    }
-    if (proyecto) {
-        filtered = filtered.filter(c => c.proyecto_id === proyecto);
-    }
+    var search = document.getElementById('clientesSearch').value.toLowerCase();
+    var proyecto = document.getElementById('clientesProyecto').value;
+    var filtered = allClientes;
+    if (search) { filtered = filtered.filter(function(c) { return c.nombre.toLowerCase().indexOf(search) !== -1; }); }
+    if (proyecto) { filtered = filtered.filter(function(c) { return c.proyecto_id === proyecto; }); }
     renderClientes(filtered);
 }
 
-// ============================================
-// CLIENTE DETALLE
-// ============================================
 async function showClienteDetalle(clienteId) {
     navigateTo('cliente-detalle');
-
-    const cliente = allClientes.find(c => c.id === clienteId);
+    var cliente = allClientes.find(function(c) { return c.id === clienteId; });
     if (!cliente) return;
 
     document.getElementById('detalleNombre').textContent = cliente.nombre;
     document.getElementById('detalleSubtitulo').textContent = cliente.proyecto_nombre + ' - Parcela ' + cliente.parcela_numero;
 
-    // Datos del cliente
-    let datosHtml = '';
+    var datosHtml = '';
     datosHtml += '<div class="detail-field"><label>Nombre</label><span>' + cliente.nombre + '</span></div>';
     datosHtml += '<div class="detail-field"><label>Proyecto</label><span>' + cliente.proyecto_nombre + '</span></div>';
     datosHtml += '<div class="detail-field"><label>Parcela</label><span>' + cliente.parcela_numero + '</span></div>';
     datosHtml += '<div class="detail-field"><label>Estado</label><span>' + (cliente.medidor ? '<span class="badge badge-green">Conectado</span>' : '<span class="badge badge-gray">Sin medidor</span>') + '</span></div>';
     document.getElementById('detalleDatos').innerHTML = datosHtml;
 
-    // Medidor
     if (cliente.medidor) {
-        let medHtml = '';
-        medHtml += '<div class="detail-field"><label>Numero de medidor</label><span>' + cliente.medidor + '</span></div>';
-        document.getElementById('detalleMedidor').innerHTML = medHtml;
+        document.getElementById('detalleMedidor').innerHTML = '<div class="detail-field"><label>Numero de medidor</label><span>' + cliente.medidor + '</span></div>';
     } else {
         document.getElementById('detalleMedidor').innerHTML = '<div class="empty-state" style="padding:20px;">Sin medidor asignado</div>';
     }
 
-    // Lecturas
     if (cliente.medidor_id) {
-        const { data: lecturas } = await supabase
-            .from('lecturas')
-            .select('fecha, lectura_kwh, consumo_kwh')
-            .eq('medidor_id', cliente.medidor_id)
-            .order('fecha', { ascending: false });
-
+        var lectResult = await db.from('lecturas').select('fecha, lectura_kwh, consumo_kwh').eq('medidor_id', cliente.medidor_id).order('fecha', { ascending: false });
+        var lecturas = lectResult.data;
         if (lecturas && lecturas.length > 0) {
-            let html = '';
-            lecturas.forEach(l => {
-                html += '<tr>';
-                html += '<td>' + formatDate(l.fecha) + '</td>';
-                html += '<td>' + (l.lectura_kwh || 0) + ' kWh</td>';
-                html += '<td><strong>' + (l.consumo_kwh || 0) + ' kWh</strong></td>';
-                html += '</tr>';
+            var html = '';
+            lecturas.forEach(function(l) {
+                html += '<tr><td>' + formatDate(l.fecha) + '</td><td>' + (l.lectura_kwh || 0) + ' kWh</td><td><strong>' + (l.consumo_kwh || 0) + ' kWh</strong></td></tr>';
             });
             document.getElementById('detalleLecturas').innerHTML = html;
         } else {
@@ -1419,54 +875,49 @@ async function showClienteDetalle(clienteId) {
     }
 }
 
-// ============================================
-// PARCELAS
-// ============================================
 async function loadParcelas() {
     try {
-        const { data: parcelas } = await supabase
-            .from('parcelas')
-            .select('id, numero, proyecto_id, cuartel_id, cliente_id')
-            .order('numero');
-
+        var parcResult = await db.from('parcelas').select('id, numero, proyecto_id, cuartel_id, cliente_id').order('numero');
+        var parcelas = parcResult.data;
         if (!parcelas) return;
 
-        // Load related data
-        const proyectoIds = [...new Set(parcelas.map(p => p.proyecto_id))];
-        const cuartelIds = [...new Set(parcelas.filter(p => p.cuartel_id).map(p => p.cuartel_id))];
-        const clienteIds = [...new Set(parcelas.filter(p => p.cliente_id).map(p => p.cliente_id))];
-        const parcelaIds = parcelas.map(p => p.id);
+        var proyectoIds = []; var cuartelIds = []; var clienteIds = []; var parcelaIds = [];
+        parcelas.forEach(function(p) {
+            if (proyectoIds.indexOf(p.proyecto_id) === -1) proyectoIds.push(p.proyecto_id);
+            if (p.cuartel_id && cuartelIds.indexOf(p.cuartel_id) === -1) cuartelIds.push(p.cuartel_id);
+            if (p.cliente_id && clienteIds.indexOf(p.cliente_id) === -1) clienteIds.push(p.cliente_id);
+            parcelaIds.push(p.id);
+        });
 
-        const [proyRes, cuartRes, cliRes, medRes] = await Promise.all([
-            supabase.from('proyectos').select('id, nombre').in('id', proyectoIds),
-            cuartelIds.length > 0 ? supabase.from('cuarteles').select('id, nombre').in('id', cuartelIds) : { data: [] },
-            clienteIds.length > 0 ? supabase.from('clientes').select('id, nombre').in('id', clienteIds) : { data: [] },
-            supabase.from('medidores').select('id, numero_medidor, parcela_id').in('parcela_id', parcelaIds)
-        ]);
+        var proyRes = await db.from('proyectos').select('id, nombre').in('id', proyectoIds);
+        var cuartRes = cuartelIds.length > 0 ? await db.from('cuarteles').select('id, nombre').in('id', cuartelIds) : { data: [] };
+        var cliRes = clienteIds.length > 0 ? await db.from('clientes').select('id, nombre').in('id', clienteIds) : { data: [] };
+        var medRes = await db.from('medidores').select('id, numero_medidor, parcela_id').in('parcela_id', parcelaIds);
 
-        const proyMap = {}; (proyRes.data || []).forEach(p => { proyMap[p.id] = p.nombre; });
-        const cuartMap = {}; (cuartRes.data || []).forEach(c => { cuartMap[c.id] = c.nombre; });
-        const cliMap = {}; (cliRes.data || []).forEach(c => { cliMap[c.id] = c.nombre; });
-        const medMap = {}; (medRes.data || []).forEach(m => { medMap[m.parcela_id] = m.numero_medidor; });
+        var proyMap = {}; (proyRes.data || []).forEach(function(p) { proyMap[p.id] = p.nombre; });
+        var cuartMap = {}; (cuartRes.data || []).forEach(function(c) { cuartMap[c.id] = c.nombre; });
+        var cliMap = {}; (cliRes.data || []).forEach(function(c) { cliMap[c.id] = c.nombre; });
+        var medMap = {}; (medRes.data || []).forEach(function(m) { medMap[m.parcela_id] = m.numero_medidor; });
 
-        // Fill filter
-        const select = document.getElementById('parcelasProyecto');
+        var select = document.getElementById('parcelasProyecto');
         if (select.options.length <= 1 && proyRes.data) {
-            proyRes.data.forEach(p => {
-                const opt = document.createElement('option');
+            proyRes.data.forEach(function(p) {
+                var opt = document.createElement('option');
                 opt.value = p.id;
                 opt.textContent = p.nombre;
                 select.appendChild(opt);
             });
         }
 
-        allParcelas = parcelas.map(p => ({
-            ...p,
-            proyecto_nombre: proyMap[p.proyecto_id] || '-',
-            cuartel_nombre: cuartMap[p.cuartel_id] || '-',
-            cliente_nombre: cliMap[p.cliente_id] || '-',
-            medidor: medMap[p.id] || null
-        }));
+        allParcelas = parcelas.map(function(p) {
+            return {
+                id: p.id, numero: p.numero, proyecto_id: p.proyecto_id, cuartel_id: p.cuartel_id, cliente_id: p.cliente_id,
+                proyecto_nombre: proyMap[p.proyecto_id] || '-',
+                cuartel_nombre: cuartMap[p.cuartel_id] || '-',
+                cliente_nombre: cliMap[p.cliente_id] || '-',
+                medidor: medMap[p.id] || null
+            };
+        });
 
         renderParcelas(allParcelas);
     } catch (err) {
@@ -1476,14 +927,12 @@ async function loadParcelas() {
 
 function renderParcelas(parcelas) {
     document.getElementById('parcelasCount').textContent = parcelas.length + ' Parcelas';
-
     if (parcelas.length === 0) {
         document.getElementById('parcelasTable').innerHTML = '<tr><td colspan="6" class="empty-state">No se encontraron parcelas</td></tr>';
         return;
     }
-
-    let html = '';
-    parcelas.forEach(p => {
+    var html = '';
+    parcelas.forEach(function(p) {
         html += '<tr>';
         html += '<td><strong>' + p.numero + '</strong></td>';
         html += '<td>' + p.proyecto_nombre + '</td>';
@@ -1497,90 +946,60 @@ function renderParcelas(parcelas) {
 }
 
 function filterParcelas() {
-    const proyecto = document.getElementById('parcelasProyecto').value;
-    const estado = document.getElementById('parcelasEstado').value;
-
-    let filtered = allParcelas;
-    if (proyecto) {
-        filtered = filtered.filter(p => p.proyecto_id === proyecto);
-    }
-    if (estado === 'conectada') {
-        filtered = filtered.filter(p => p.medidor);
-    } else if (estado === 'no_conectada') {
-        filtered = filtered.filter(p => !p.medidor);
-    }
+    var proyecto = document.getElementById('parcelasProyecto').value;
+    var estado = document.getElementById('parcelasEstado').value;
+    var filtered = allParcelas;
+    if (proyecto) { filtered = filtered.filter(function(p) { return p.proyecto_id === proyecto; }); }
+    if (estado === 'conectada') { filtered = filtered.filter(function(p) { return p.medidor; }); }
+    else if (estado === 'no_conectada') { filtered = filtered.filter(function(p) { return !p.medidor; }); }
     renderParcelas(filtered);
 }
 
-// ============================================
-// LECTURAS
-// ============================================
 async function loadLecturas() {
     try {
-        const { data: lecturas } = await supabase
-            .from('lecturas')
-            .select('id, fecha, lectura_kwh, consumo_kwh, medidor_id')
-            .order('fecha', { ascending: false })
-            .limit(200);
-
+        var lectResult = await db.from('lecturas').select('id, fecha, lectura_kwh, consumo_kwh, medidor_id').order('fecha', { ascending: false }).limit(200);
+        var lecturas = lectResult.data;
         if (!lecturas) return;
 
-        // Get related data
-        const medidorIds = [...new Set(lecturas.map(l => l.medidor_id))];
-        const { data: medidores } = await supabase
-            .from('medidores')
-            .select('id, parcela_id, numero_medidor')
-            .in('id', medidorIds);
+        var medidorIds = [];
+        lecturas.forEach(function(l) { if (medidorIds.indexOf(l.medidor_id) === -1) medidorIds.push(l.medidor_id); });
+        var medResult = await db.from('medidores').select('id, parcela_id, numero_medidor').in('id', medidorIds);
+        var medidores = medResult.data || [];
 
-        const medMap = {};
-        const parcelaIds = [];
-        if (medidores) {
-            medidores.forEach(m => {
-                medMap[m.id] = m;
-                if (m.parcela_id) parcelaIds.push(m.parcela_id);
-            });
-        }
+        var medMap = {}; var parcIds = [];
+        medidores.forEach(function(m) { medMap[m.id] = m; if (m.parcela_id) parcIds.push(m.parcela_id); });
 
-        const { data: parcelas } = await supabase
-            .from('parcelas')
-            .select('id, numero, proyecto_id, cliente_id')
-            .in('id', parcelaIds);
+        var parcResult = await db.from('parcelas').select('id, numero, proyecto_id, cliente_id').in('id', parcIds);
+        var parcelas = parcResult.data || [];
 
-        const parcMap = {};
-        const clienteIds = [];
-        const proyectoIds = new Set();
-        if (parcelas) {
-            parcelas.forEach(p => {
-                parcMap[p.id] = p;
-                if (p.cliente_id) clienteIds.push(p.cliente_id);
-                proyectoIds.add(p.proyecto_id);
-            });
-        }
+        var parcMap = {}; var clienteIds = []; var proyectoIds = [];
+        parcelas.forEach(function(p) {
+            parcMap[p.id] = p;
+            if (p.cliente_id && clienteIds.indexOf(p.cliente_id) === -1) clienteIds.push(p.cliente_id);
+            if (proyectoIds.indexOf(p.proyecto_id) === -1) proyectoIds.push(p.proyecto_id);
+        });
 
-        const [cliRes, proyRes] = await Promise.all([
-            clienteIds.length > 0 ? supabase.from('clientes').select('id, nombre').in('id', clienteIds) : { data: [] },
-            supabase.from('proyectos').select('id, nombre').in('id', [...proyectoIds])
-        ]);
+        var cliRes = clienteIds.length > 0 ? await db.from('clientes').select('id, nombre').in('id', clienteIds) : { data: [] };
+        var proyRes = await db.from('proyectos').select('id, nombre').in('id', proyectoIds);
 
-        const cliMap = {}; (cliRes.data || []).forEach(c => { cliMap[c.id] = c.nombre; });
-        const proyMap = {}; (proyRes.data || []).forEach(p => { proyMap[p.id] = p.nombre; });
+        var cliMap = {}; (cliRes.data || []).forEach(function(c) { cliMap[c.id] = c.nombre; });
+        var proyMap = {}; (proyRes.data || []).forEach(function(p) { proyMap[p.id] = p.nombre; });
 
-        // Fill filter
-        const select = document.getElementById('lecturasProyecto');
+        var select = document.getElementById('lecturasProyecto');
         if (select.options.length <= 1 && proyRes.data) {
-            proyRes.data.forEach(p => {
-                const opt = document.createElement('option');
+            proyRes.data.forEach(function(p) {
+                var opt = document.createElement('option');
                 opt.value = p.id;
                 opt.textContent = p.nombre;
                 select.appendChild(opt);
             });
         }
 
-        allLecturas = lecturas.map(l => {
-            const med = medMap[l.medidor_id] || {};
-            const parc = parcMap[med.parcela_id] || {};
+        allLecturas = lecturas.map(function(l) {
+            var med = medMap[l.medidor_id] || {};
+            var parc = parcMap[med.parcela_id] || {};
             return {
-                ...l,
+                id: l.id, fecha: l.fecha, lectura_kwh: l.lectura_kwh, consumo_kwh: l.consumo_kwh, medidor_id: l.medidor_id,
                 parcela_numero: parc.numero || '-',
                 proyecto_id: parc.proyecto_id,
                 proyecto_nombre: proyMap[parc.proyecto_id] || '-',
@@ -1596,14 +1015,12 @@ async function loadLecturas() {
 
 function renderLecturas(lecturas) {
     document.getElementById('lecturasCount').textContent = lecturas.length + ' Lecturas';
-
     if (lecturas.length === 0) {
         document.getElementById('lecturasTable').innerHTML = '<tr><td colspan="6" class="empty-state">No se encontraron lecturas</td></tr>';
         return;
     }
-
-    let html = '';
-    lecturas.forEach(l => {
+    var html = '';
+    lecturas.forEach(function(l) {
         html += '<tr>';
         html += '<td>' + formatDate(l.fecha) + '</td>';
         html += '<td>' + l.cliente_nombre + '</td>';
@@ -1617,35 +1034,21 @@ function renderLecturas(lecturas) {
 }
 
 function filterLecturas() {
-    const search = document.getElementById('lecturasSearch').value.toLowerCase();
-    const proyecto = document.getElementById('lecturasProyecto').value;
-
-    let filtered = allLecturas;
-    if (search) {
-        filtered = filtered.filter(l =>
-            l.cliente_nombre.toLowerCase().includes(search) ||
-            l.parcela_numero.toLowerCase().includes(search)
-        );
-    }
-    if (proyecto) {
-        filtered = filtered.filter(l => l.proyecto_id === proyecto);
-    }
+    var search = document.getElementById('lecturasSearch').value.toLowerCase();
+    var proyecto = document.getElementById('lecturasProyecto').value;
+    var filtered = allLecturas;
+    if (search) { filtered = filtered.filter(function(l) { return l.cliente_nombre.toLowerCase().indexOf(search) !== -1 || l.parcela_numero.toLowerCase().indexOf(search) !== -1; }); }
+    if (proyecto) { filtered = filtered.filter(function(l) { return l.proyecto_id === proyecto; }); }
     renderLecturas(filtered);
 }
 
-// ============================================
-// UTILIDADES
-// ============================================
 function formatDate(dateStr) {
     if (!dateStr) return '-';
-    const d = new Date(dateStr + 'T00:00:00');
-    const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    var d = new Date(dateStr + 'T00:00:00');
+    var months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
     return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
 }
 
-// ============================================
-// INICIAR
-// ============================================
 checkSession();
 </script>
 </body>
